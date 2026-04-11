@@ -2,7 +2,7 @@ export type ItemType = 'food' | 'medicine' | 'toy' | 'cleaning' | 'special';
 export type ItemRarity = 'common' | 'uncommon' | 'rare' | 'epic';
 
 export interface ItemEffect {
-  hunger?: number;
+  food?: number;
   happiness?: number;
   energy?: number;
   cleanliness?: number;

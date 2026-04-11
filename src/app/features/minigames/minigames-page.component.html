@@ -1,0 +1,43 @@
+<section class="mx-auto max-w-5xl px-4 py-8 text-slate-100">
+  <header class="mb-8 flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">minigames</p>
+      <h1 class="mt-2 text-3xl font-black tracking-tight">Selección de minijuegos</h1>
+      <p class="mt-2 text-sm text-slate-400">
+        Aquí eliges el minijuego. Por ahora solo hay uno, pero esta pantalla ya queda lista para crecer.
+      </p>
+    </div>
+
+    <a routerLink="/"
+      class="rounded-2xl bg-white/10 px-4 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/20">
+      Volver al gotchi
+    </a>
+  </header>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <article class="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-lg font-bold">Reflejo Gotchi</p>
+          <p class="mt-1 text-sm text-slate-400">
+            Minijuego simple de reflejos. Reacciona rápido para ganar mejor recompensa.
+          </p>
+        </div>
+        <span class="rounded-full bg-cyan-400/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-cyan-200">
+          Activo
+        </span>
+      </div>
+
+      <ul class="mt-4 space-y-2 text-sm text-slate-300">
+        <li>• Dificultad inicial baja</li>
+        <li>• Ideal para probar rewards random</li>
+        <li>• Base perfecta para el primer loop de drops</li>
+      </ul>
+
+      <a routerLink="/minigames/reaction"
+        class="mt-5 inline-flex rounded-2xl bg-cyan-400 px-4 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300">
+        Jugar
+      </a>
+    </article>
+  </div>
+</section>

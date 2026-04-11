@@ -1,16 +1,57 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { InventoryItem } from '../models/inventory-item.model';
 import { Item } from '../models/item.model';
 import { PetStore } from './pet.store';
+import { PersistenceService } from '../services/persistence.service';
 
 const itemCatalog: Item[] = [
   {
     id: 'apple-basic',
-    name: 'Manzana',
+    name: 'Manzanas',
     type: 'food',
     rarity: 'common',
-    description: 'Baja un poco el hambre.',
-    effect: { hunger: -12 },
+    description: 'Sube un poco la comida.',
+    effect: { food: 12 },
+  },
+  {
+    id: 'cookie-basic',
+    name: 'Galletas',
+    type: 'food',
+    rarity: 'uncommon',
+    description: 'Suben comida y dan un poco de energía.',
+    effect: { food: 10, energy: 6 },
+  },
+  {
+    id: 'can-premium',
+    name: 'Lata premium',
+    type: 'food',
+    rarity: 'rare',
+    description: 'Comida potente que también anima al gotchi.',
+    effect: { food: 20, happiness: 8 },
+  },
+  {
+    id: 'pill-basic',
+    name: 'Medicina simple',
+    type: 'medicine',
+    rarity: 'common',
+    description: 'Recupera un poco de salud.',
+    effect: { health: 12 },
+  },
+  {
+    id: 'med-kit',
+    name: 'Kit médico',
+    type: 'medicine',
+    rarity: 'uncommon',
+    description: 'Recuperación fuerte para casos delicados.',
+    effect: { health: 22 },
+  },
+  {
+    id: 'vitamin-shot',
+    name: 'Inyección vitamínica',
+    type: 'medicine',
+    rarity: 'rare',
+    description: 'Mejora salud con empuje extra de energía.',
+    effect: { health: 20, energy: 10 },
   },
   {
     id: 'soap-basic',
@@ -21,6 +62,22 @@ const itemCatalog: Item[] = [
     effect: { cleanliness: 18 },
   },
   {
+    id: 'wipes-soft',
+    name: 'Toallitas',
+    type: 'cleaning',
+    rarity: 'uncommon',
+    description: 'Limpieza ligera con pequeño confort extra.',
+    effect: { cleanliness: 12, happiness: 3 },
+  },
+  {
+    id: 'bubble-bath',
+    name: 'Baño de burbujas',
+    type: 'cleaning',
+    rarity: 'rare',
+    description: 'Limpieza profunda con mejora de ánimo.',
+    effect: { cleanliness: 22, happiness: 6 },
+  },
+  {
     id: 'toy-ball',
     name: 'Pelota',
     type: 'toy',
@@ -29,28 +86,91 @@ const itemCatalog: Item[] = [
     effect: { happiness: 10, energy: -4 },
   },
   {
-    id: 'pill-basic',
-    name: 'Medicina simple',
-    type: 'medicine',
+    id: 'toy-deluxe',
+    name: 'Juguete deluxe',
+    type: 'toy',
     rarity: 'uncommon',
-    description: 'Recupera salud.',
-    effect: { health: 15 },
+    description: 'Sube bastante la felicidad.',
+    effect: { happiness: 16 },
+  },
+  {
+    id: 'mini-console',
+    name: 'Mini consola',
+    type: 'toy',
+    rarity: 'rare',
+    description: 'Sube felicidad bastante, pero consume un poco de energía.',
+    effect: { happiness: 18, energy: -6 },
+  },
+  {
+    id: 'legend-snack',
+    name: 'Snack legendario',
+    type: 'special',
+    rarity: 'epic',
+    description: 'Sube mucho la comida y mejora el ánimo.',
+    effect: { food: 30, happiness: 8 },
+  },
+  {
+    id: 'emotional-chip',
+    name: 'Chip emocional',
+    type: 'special',
+    rarity: 'epic',
+    description: 'Eleva bastante la felicidad.',
+    effect: { happiness: 25, health: 5 },
+  },
+  {
+    id: 'energy-crystal',
+    name: 'Cristal de energía',
+    type: 'special',
+    rarity: 'epic',
+    description: 'Recarga energía en situaciones críticas.',
+    effect: { energy: 30, happiness: 5 },
+  },
+  {
+    id: 'purifier-mist',
+    name: 'Neblina purificadora',
+    type: 'special',
+    rarity: 'epic',
+    description: 'Limpieza profunda con mejora ligera a salud.',
+    effect: { cleanliness: 28, health: 4 },
+  },
+  {
+    id: 'vital-core',
+    name: 'Núcleo vital',
+    type: 'special',
+    rarity: 'epic',
+    description: 'Recupera salud y algo de energía.',
+    effect: { health: 30, energy: 8 },
   },
 ];
 
 const initialInventory: InventoryItem[] = [
-  { itemId: 'apple-basic', quantity: 3 },
-  { itemId: 'soap-basic', quantity: 2 },
-  { itemId: 'toy-ball', quantity: 1 },
-  { itemId: 'pill-basic', quantity: 1 },
+  { itemId: 'apple-basic', quantity: 5 },
+  { itemId: 'cookie-basic', quantity: 5 },
+  { itemId: 'can-premium', quantity: 5 },
+  { itemId: 'pill-basic', quantity: 5 },
+  { itemId: 'med-kit', quantity: 5 },
+  { itemId: 'vitamin-shot', quantity: 5 },
+  { itemId: 'soap-basic', quantity: 5 },
+  { itemId: 'wipes-soft', quantity: 5 },
+  { itemId: 'bubble-bath', quantity: 5 },
+  { itemId: 'toy-ball', quantity: 5 },
+  { itemId: 'toy-deluxe', quantity: 5 },
+  { itemId: 'mini-console', quantity: 5 },
+  { itemId: 'legend-snack', quantity: 5 },
+  { itemId: 'emotional-chip', quantity: 5 },
+  { itemId: 'energy-crystal', quantity: 5 },
+  { itemId: 'purifier-mist', quantity: 5 },
+  { itemId: 'vital-core', quantity: 5 },
 ];
 
 @Injectable({ providedIn: 'root' })
 export class InventoryStore {
   private readonly petStore = inject(PetStore);
+  private readonly persistence = inject(PersistenceService);
 
   readonly catalog = signal<Item[]>(itemCatalog);
   readonly inventory = signal<InventoryItem[]>(initialInventory);
+  readonly isHydrated = signal(false);
 
   readonly inventoryView = computed(() => {
     const catalog = this.catalog();
@@ -72,6 +192,25 @@ export class InventoryStore {
       .filter((item): item is Item & { quantity: number } => item !== null);
   });
 
+  constructor() {
+    this.hydrate();
+
+    effect(() => {
+      if (!this.isHydrated()) return;
+      void this.persistence.saveInventory(this.inventory());
+    });
+  }
+
+  async hydrate(): Promise<void> {
+    const savedInventory = await this.persistence.loadInventory();
+
+    if (savedInventory.length > 0) {
+      this.inventory.set(savedInventory);
+    }
+
+    this.isHydrated.set(true);
+  }
+
   addItem(itemId: string, quantity = 1): void {
     this.inventory.update((items) => {
       const found = items.find((item) => item.itemId === itemId);
@@ -91,7 +230,7 @@ export class InventoryStore {
   useItem(itemId: string): boolean {
     const item = this.catalog().find((entry) => entry.id === itemId);
 
-    if (!item || this.petStore.pet().isDead) {
+    if (!item || this.petStore.pet().isDead || this.petStore.isSleeping()) {
       return false;
     }
 

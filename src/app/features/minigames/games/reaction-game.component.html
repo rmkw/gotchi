@@ -1,0 +1,89 @@
+<section class="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl text-slate-100">
+  <header class="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">reaction game</p>
+      <h2 class="mt-2 text-2xl font-black tracking-tight">Reflejo Gotchi</h2>
+      <p class="mt-2 text-sm text-slate-400">{{ statusText() }}</p>
+    </div>
+
+    <a routerLink="/minigames"
+      class="rounded-2xl bg-white/10 px-4 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/20">
+      Volver
+    </a>
+  </header>
+
+  <div class="grid gap-4 md:grid-cols-4">
+    <div class="rounded-2xl bg-slate-900/70 p-4">
+      <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Score</p>
+      <p class="mt-2 text-3xl font-black">{{ score() }}</p>
+    </div>
+
+    <div class="rounded-2xl bg-slate-900/70 p-4">
+      <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Ronda</p>
+      <p class="mt-2 text-3xl font-black">{{ round() }}/{{ maxRounds }}</p>
+    </div>
+
+    <div class="rounded-2xl bg-slate-900/70 p-4">
+      <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Tier</p>
+      <p class="mt-2 text-3xl font-black">{{ tier() ?? '-' }}</p>
+    </div>
+
+    <div class="rounded-2xl bg-slate-900/70 p-4">
+      <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Dificultad</p>
+      <p class="mt-2 text-3xl font-black">{{ currentDifficulty() }}</p>
+    </div>
+  </div>
+
+  <div
+    class="mt-6 flex min-h-72 items-center justify-center overflow-hidden rounded-3xl border border-dashed border-cyan-400/20 bg-slate-900/70 p-6">
+    @if (!isRunning() && !reward()) {
+    <button class="rounded-3xl bg-cyan-400 px-6 py-4 text-lg font-bold text-slate-950 transition hover:bg-cyan-300"
+      (click)="startGame()">
+      Iniciar partida
+    </button>
+    } @else if (isRunning()) {
+    <div class="flex h-full w-full items-center justify-center">
+      <button class="flex items-center justify-center rounded-full text-lg font-black transition-all duration-150"
+        [style.width.px]="targetSize()" [style.height.px]="targetSize()"
+        [style.transform]="'translate(' + targetOffsetX() + 'px, ' + targetOffsetY() + 'px)'"
+        [class.bg-rose-500]="isTargetVisible()" [class.text-white]="isTargetVisible()"
+        [class.scale-110]="isTargetVisible()" [class.animate-pulse]="isTargetVisible()"
+        [class.shadow-[0_0_35px_rgba(244,63,94,0.75)]]="isTargetVisible()" [class.bg-slate-700]="!isTargetVisible()"
+        [class.text-slate-300]="!isTargetVisible()" [class.scale-100]="!isTargetVisible()"
+        (click)="isTargetVisible() ? hitTarget() : missTarget()">
+        {{ isTargetVisible() ? '¡CLICK!' : '...' }}
+      </button>
+    </div>
+    }
+  </div>
+
+  @if (reward()) {
+  <div class="mt-6 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+    <p class="text-sm uppercase tracking-[0.2em] text-emerald-200">Rewards obtenidos</p>
+
+    <div class="mt-3 space-y-3">
+      @for (entry of rewardDetails(); track entry.itemId) {
+      <div class="rounded-xl bg-emerald-500/10 px-3 py-3">
+        <p class="font-bold text-emerald-100">{{ entry.name }}</p>
+        <p class="text-sm text-emerald-200">{{ entry.description }}</p>
+        <p class="mt-1 text-xs uppercase tracking-[0.2em] text-emerald-300">Rareza: {{ entry.rarity }}</p>
+      </div>
+      }
+    </div>
+
+    <p class="mt-4 text-sm text-emerald-200">Tier global: {{ reward()?.tier }}</p>
+
+    <div class="mt-4 flex flex-wrap gap-3">
+      <button class="rounded-2xl bg-emerald-300 px-4 py-3 font-semibold text-slate-950 transition hover:bg-emerald-200"
+        (click)="startGame()">
+        Jugar otra vez
+      </button>
+
+      <a routerLink="/"
+        class="rounded-2xl bg-white/10 px-4 py-3 font-semibold text-slate-100 transition hover:bg-white/20">
+        Volver al gotchi
+      </a>
+    </div>
+  </div>
+  }
+</section>

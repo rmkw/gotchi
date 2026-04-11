@@ -9,7 +9,7 @@ export type PetMood =
 
 export interface Pet {
   name: string;
-  hunger: number;
+  food: number;
   happiness: number;
   energy: number;
   cleanliness: number;
