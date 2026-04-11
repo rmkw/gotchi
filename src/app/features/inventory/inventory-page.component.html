@@ -1,0 +1,71 @@
+<section class="mx-auto max-w-5xl px-4 py-8 text-slate-100">
+  <header class="mb-6">
+    <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">inventory</p>
+    <h1 class="mt-2 text-3xl font-black tracking-tight">Inventario</h1>
+    <p class="mt-2 text-sm text-slate-400">
+      Desde aquí cuidas al gotchi usando items. Los botones de acción directa desaparecen.
+    </p>
+  </header>
+
+  <div class="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <p class="text-lg font-bold">{{ pet().name }}</p>
+        <p class="text-sm text-slate-400">Estado actual del pet</p>
+      </div>
+      <div class="rounded-full bg-cyan-400/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-cyan-200">
+        Inventario conectado
+      </div>
+    </div>
+
+    <div class="mt-4 grid gap-3 md:grid-cols-5">
+      <div class="rounded-xl bg-slate-900/70 p-3">
+        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Hambre</p>
+        <p class="mt-1 text-lg font-bold">{{ pet().hunger }}/100</p>
+      </div>
+      <div class="rounded-xl bg-slate-900/70 p-3">
+        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Felicidad</p>
+        <p class="mt-1 text-lg font-bold">{{ pet().happiness }}/100</p>
+      </div>
+      <div class="rounded-xl bg-slate-900/70 p-3">
+        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Energía</p>
+        <p class="mt-1 text-lg font-bold">{{ pet().energy }}/100</p>
+      </div>
+      <div class="rounded-xl bg-slate-900/70 p-3">
+        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Limpieza</p>
+        <p class="mt-1 text-lg font-bold">{{ pet().cleanliness }}/100</p>
+      </div>
+      <div class="rounded-xl bg-slate-900/70 p-3">
+        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Salud</p>
+        <p class="mt-1 text-lg font-bold">{{ pet().health }}/100</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    @for (item of items(); track item.id) {
+    <article class="rounded-2xl border border-white/10 bg-white/5 p-4">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-lg font-bold">{{ item.name }}</p>
+          <p class="text-sm text-slate-400">{{ item.description }}</p>
+        </div>
+        <span class="rounded-full bg-cyan-400/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-cyan-200">
+          {{ item.rarity }}
+        </span>
+      </div>
+
+      <div class="mt-4 space-y-1 text-sm text-slate-300">
+        <p>Tipo: {{ item.type }}</p>
+        <p>Cantidad: {{ item.quantity }}</p>
+      </div>
+
+      <button
+        class="mt-4 rounded-xl bg-cyan-400 px-4 py-2 font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+        (click)="useItem(item.id)" [disabled]="pet().isDead || item.quantity <= 0">
+        Usar item
+      </button>
+    </article>
+    }
+  </div>
+</section>

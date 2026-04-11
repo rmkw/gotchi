@@ -1,5 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { Pet, PetMood } from '../models/pet.model';
+import { ItemEffect } from '../models/item.model';
 
 const MAX_STAT = 100;
 const MIN_STAT = 0;
@@ -92,49 +93,16 @@ export class PetStore {
     }));
   }
 
-  feed(): void {
+  applyItemEffect(effect: ItemEffect): void {
     if (this.pet().isDead) return;
 
     this.updatePet((pet) => ({
       ...pet,
-      hunger: pet.hunger - 18,
-      happiness: pet.happiness + 4,
-      cleanliness: pet.cleanliness - 6,
-      health: pet.health + 2,
-    }));
-  }
-
-  play(): void {
-    if (this.pet().isDead) return;
-
-    this.updatePet((pet) => ({
-      ...pet,
-      happiness: pet.happiness + 12,
-      energy: pet.energy - 10,
-      hunger: pet.hunger + 8,
-      cleanliness: pet.cleanliness - 5,
-    }));
-  }
-
-  sleep(): void {
-    if (this.pet().isDead) return;
-
-    this.updatePet((pet) => ({
-      ...pet,
-      energy: pet.energy + 20,
-      hunger: pet.hunger + 6,
-      happiness: pet.happiness + 3,
-    }));
-  }
-
-  clean(): void {
-    if (this.pet().isDead) return;
-
-    this.updatePet((pet) => ({
-      ...pet,
-      cleanliness: pet.cleanliness + 24,
-      happiness: pet.happiness - 2,
-      health: pet.health + 4,
+      hunger: pet.hunger + (effect.hunger ?? 0),
+      happiness: pet.happiness + (effect.happiness ?? 0),
+      energy: pet.energy + (effect.energy ?? 0),
+      cleanliness: pet.cleanliness + (effect.cleanliness ?? 0),
+      health: pet.health + (effect.health ?? 0),
     }));
   }
 
