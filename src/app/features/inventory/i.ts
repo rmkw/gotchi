@@ -14,11 +14,11 @@ import { ItemEffect } from '../../core/models/item.model';
 @Component({
   selector: 'app-inventory-page',
   imports: [RouterLink],
-  templateUrl: './inventory-page.component.html',
+  templateUrl: './i.html',
   styleUrl: './inventory-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InventoryPageComponent implements OnInit {
+export class InventoryPageComponent2 implements OnInit {
   private readonly inventoryStore = inject(InventoryStore);
   private readonly petStore = inject(PetStore);
 
