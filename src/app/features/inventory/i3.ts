@@ -34,7 +34,7 @@ export class InventoryPageComponent4 implements OnInit {
   readonly deathCount = this.petStore.deathCount;
   readonly openDrawer = signal<
     'food' | 'medicine' | 'cleaning' | 'toy' | 'special' | null
-  >('food');
+  >(null);
 
   readonly petFace = computed(() => {
     if (this.isSleeping()) {

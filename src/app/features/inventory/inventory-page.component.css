@@ -6,9 +6,80 @@
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+
+.inventory-tab {
+  border-color: rgb(255 255 255 / 0.1);
+  background: rgb(255 255 255 / 0.05);
+}
+
+.inventory-tab-active.inventory-tab-rose {
+  border-color: rgb(251 113 133 / 0.5);
+  background: rgb(251 113 133 / 0.15);
+  box-shadow: 0 0 18px rgb(251 113 133 / 0.25);
+  color: rgb(254 205 211);
+}
+
+.inventory-tab-active.inventory-tab-emerald {
+  border-color: rgb(52 211 153 / 0.5);
+  background: rgb(52 211 153 / 0.15);
+  box-shadow: 0 0 18px rgb(52 211 153 / 0.25);
+  color: rgb(167 243 208);
+}
+
+.inventory-tab-active.inventory-tab-sky {
+  border-color: rgb(56 189 248 / 0.5);
+  background: rgb(56 189 248 / 0.15);
+  box-shadow: 0 0 18px rgb(56 189 248 / 0.25);
+  color: rgb(186 230 253);
+}
+
+.inventory-tab-active.inventory-tab-amber {
+  border-color: rgb(251 191 36 / 0.5);
+  background: rgb(251 191 36 / 0.15);
+  box-shadow: 0 0 18px rgb(251 191 36 / 0.25);
+  color: rgb(253 230 138);
+}
+
+.inventory-tab-active.inventory-tab-fuchsia {
+  border-color: rgb(232 121 249 / 0.5);
+  background: rgb(232 121 249 / 0.15);
+  box-shadow: 0 0 18px rgb(232 121 249 / 0.25);
+  color: rgb(245 208 254);
+}
+
+.inventory-tab-inactive {
+  color: rgb(226 232 240);
+}
+
+.inventory-tab-rose .inventory-tab-icon {
+  border-color: rgb(251 113 133 / 0.4);
+  background: rgb(251 113 133 / 0.1);
+}
+
+.inventory-tab-emerald .inventory-tab-icon {
+  border-color: rgb(52 211 153 / 0.4);
+  background: rgb(52 211 153 / 0.1);
+}
+
+.inventory-tab-sky .inventory-tab-icon {
+  border-color: rgb(56 189 248 / 0.4);
+  background: rgb(56 189 248 / 0.1);
+}
+
+.inventory-tab-amber .inventory-tab-icon {
+  border-color: rgb(251 191 36 / 0.4);
+  background: rgb(251 191 36 / 0.1);
+}
+
+.inventory-tab-fuchsia .inventory-tab-icon {
+  border-color: rgb(232 121 249 / 0.4);
+  background: rgb(232 121 249 / 0.1);
 }

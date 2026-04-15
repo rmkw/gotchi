@@ -23,6 +23,9 @@ export class InventoryPageComponent implements OnInit {
   private readonly petStore = inject(PetStore);
 
   readonly items = this.inventoryStore.inventoryView;
+  readonly totalItemCount = computed(() =>
+    this.items().reduce((total, item) => total + item.quantity, 0),
+  );
   readonly pet = this.petStore.pet;
   readonly mood = this.petStore.mood;
   readonly statusMessage = this.petStore.statusMessage;
@@ -31,7 +34,7 @@ export class InventoryPageComponent implements OnInit {
   readonly deathCount = this.petStore.deathCount;
   readonly openDrawer = signal<
     'food' | 'medicine' | 'cleaning' | 'toy' | 'special' | null
-  >('food');
+  >(null);
 
   readonly petFace = computed(() => {
     if (this.isSleeping()) {
@@ -72,30 +75,35 @@ export class InventoryPageComponent implements OnInit {
       {
         type: 'food' as const,
         label: 'Comida',
+        icon: '🍕',
         accent: 'rose',
         items: items.filter((item) => item.type === 'food'),
       },
       {
         type: 'medicine' as const,
         label: 'Medicina',
+        icon: '💉',
         accent: 'emerald',
         items: items.filter((item) => item.type === 'medicine'),
       },
       {
         type: 'cleaning' as const,
         label: 'Limpieza',
+        icon: '🧼',
         accent: 'sky',
         items: items.filter((item) => item.type === 'cleaning'),
       },
       {
         type: 'toy' as const,
         label: 'Juguetes',
+        icon: '🧸',
         accent: 'amber',
         items: items.filter((item) => item.type === 'toy'),
       },
       {
         type: 'special' as const,
         label: 'Especiales',
+        icon: '✨',
         accent: 'fuchsia',
         items: items.filter((item) => item.type === 'special'),
       },

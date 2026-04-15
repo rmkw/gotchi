@@ -12,11 +12,7 @@
         <div>
           <h1 class="mt-2 text-xl font-black tracking-tight">{{ pet().name }}</h1>
           <p class="mt-2 max-w-md text-xs text-slate-300">{{ statusMessage() }}</p>
-          <div class="mt-3 flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-slate-400">
-            <span class="inline-block h-2 w-2 rounded-full" [class.bg-emerald-400]="isTicking()"
-              [class.bg-rose-400]="!isTicking()"></span>
-            <span>{{ isTicking() ? 'Tick activo' : 'Tick pausado' }}</span>
-          </div>
+
         </div>
         <div class="flex flex-col items-end gap-3">
           <div
