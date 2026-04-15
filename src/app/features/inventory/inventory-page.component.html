@@ -1,48 +1,42 @@
 <section class="inventory-mobile-page mx-auto min-h-screen max-w-md px-3 py-3 text-slate-100 sm:px-4 sm:py-4">
   <div class="mb-2 flex items-center justify-between gap-4">
-    <div>
-      <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">gotchi home</p>
-    </div>
+
   </div>
 
   <div class="space-y-3">
-    <article class="rounded-2xl border border-white/10 bg-slate-950/80 p-4 shadow-xl backdrop-blur">
+    <article class="rounded-lg border border-white/10 bg-slate-950/80 p-2 shadow-xl backdrop-blur">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">gotchi home</p>
+        </div>
+        <div class="flex flex-col items-end gap-3">
+          <div
+            class="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-200">
+            {{ mood() }}
+          </div>
+        </div>
 
+      </div>
       <div class="flex items-start justify-between gap-3">
         <div>
           <h1 class="mt-2 text-xl font-black tracking-tight">{{ pet().name }}</h1>
           <p class="mt-2 max-w-md text-xs text-slate-300">{{ statusMessage() }}</p>
-
         </div>
-        <div class="flex flex-col items-end gap-3">
-          <div
-            class="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-200">
-            {{ mood() }}
-          </div>
-
-
-        </div>
-
 
       </div>
 
-
       <div class="mt-4 grid-cols-1 gap-4">
-
-        <div class="rounded-xl border border-white/10 bg-slate-900/70 p-6">
+        <div class="rounded-lg border border-white/10 bg-slate-900/70 p-6">
           <div
-            class="flex min-h-52 flex-col items-center justify-center rounded-xl border border-dashed border-cyan-400/20 bg-gradient-to-b from-cyan-400/10 via-slate-900 to-fuchsia-500/10 p-6 text-center">
+            class="flex min-h-52 flex-col items-center justify-center rounded-lg border border-dashed border-cyan-400/20 bg-gradient-to-b from-cyan-400/10 via-slate-900 to-fuchsia-500/10 p-6 text-center">
             <div class="text-3xl md:text-3xl">{{ petFace() }}</div>
             <p class="mt-4 text-sm uppercase tracking-[0.35em] text-slate-400">mascota</p>
-
           </div>
         </div>
-
-
       </div>
 
       <div class="mt-3 grid grid-cols-3 gap-2">
-        <div class="rounded-xl bg-white/5 px-2.5 py-2">
+        <div class="rounded-lg bg-white/5 px-2.5 py-2">
           <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
             <span>HP</span>
             <span>{{ pet().health }}</span>
@@ -52,7 +46,7 @@
           </div>
         </div>
 
-        <div class="rounded-xl bg-white/5 px-2.5 py-2">
+        <div class="rounded-lg bg-white/5 px-2.5 py-2">
           <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
             <span>Food</span>
             <span>{{ pet().food }}</span>
@@ -62,7 +56,7 @@
           </div>
         </div>
 
-        <div class="rounded-xl bg-white/5 px-2.5 py-2">
+        <div class="rounded-lg bg-white/5 px-2.5 py-2">
           <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
             <span>Happy</span>
             <span>{{ pet().happiness }}</span>
@@ -71,7 +65,8 @@
             <div class="h-full rounded-full bg-amber-300" [style.width.%]="pet().happiness"></div>
           </div>
         </div>
-        <div class="rounded-xl bg-white/5 px-2.5 py-2">
+
+        <div class="rounded-lg bg-white/5 px-2.5 py-2">
           <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
             <span>Energy</span>
             <span>{{ pet().energy }}</span>
@@ -80,7 +75,8 @@
             <div class="h-full rounded-full bg-sky-400" [style.width.%]="pet().energy"></div>
           </div>
         </div>
-        <div class="rounded-xl bg-white/5 px-2.5 py-2">
+
+        <div class="rounded-lg bg-white/5 px-2.5 py-2">
           <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
             <span>Clean</span>
             <span>{{ pet().cleanliness }}</span>
@@ -90,44 +86,76 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between rounded-xl border border-rose-400/15 bg-rose-400/10 px-3 py-2">
+        <div class="flex items-center justify-between rounded-lg border border-rose-400/15 bg-rose-400/10 px-3 py-2">
           <span class="text-[10px] uppercase tracking-[0.18em] text-rose-200">{{ '(✖╭╮✖)' }} muertes</span>
           <span class="text-lg font-black text-rose-100">{{ deathCount() }}</span>
         </div>
-
       </div>
 
       <div class="mt-3 grid grid-cols-3 gap-2">
         <button
-          class="rounded-2xl bg-amber-300 px-3 py-2.5 text-xs font-semibold text-slate-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+          class="rounded-lg bg-amber-300 px-3 py-2.5 text-xs font-semibold text-slate-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           (click)="sleep()" [disabled]="pet().isDead || (!isSleeping() && !canSleep())">
           {{ sleepButtonLabel() }}
         </button>
 
         @if (!pet().isDead) {
         <a routerLink="/minigames"
-          class="flex items-center justify-center rounded-2xl bg-cyan-400 px-3 py-2.5 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300">
+          class="flex items-center justify-center rounded-lg bg-cyan-400 px-3 py-2.5 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300">
           Play
         </a>
         } @else {
-        <div class="rounded-2xl bg-slate-800/60 px-3 py-2.5 text-center text-xs text-slate-500">
+        <div class="rounded-lg bg-slate-800/60 px-3 py-2.5 text-center text-xs text-slate-500">
           No play
         </div>
         }
 
         <button
-          class="rounded-2xl bg-rose-400 px-3 py-2.5 text-xs font-semibold text-slate-950 transition hover:bg-rose-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+          class="rounded-lg bg-rose-400 px-3 py-2.5 text-xs font-semibold text-slate-950 transition hover:bg-rose-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           (click)="resetPet()" [disabled]="!pet().isDead">
           Reset
         </button>
       </div>
     </article>
 
-    <section class="rounded-3xl border border-white/10 bg-white/5 p-3 backdrop-blur">
-      <div class="mb-3 flex items-center justify-between gap-3">
+    <section class="rounded-lg border border-white/10 bg-white/5 pt-2 px-2 backdrop-blur">
+      <div class="mb-2 flex items-center justify-between gap-3">
+        <div>
+          <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">talk</p>
+        </div>
+        <button class="rounded-full bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-300"
+          (click)="openTalk()">
+          {{ geminiConfigReady() ? 'gemini listo' : 'configurar ia' }}
+        </button>
+      </div>
+
+      <div class="rounded-lg border border-white/10 bg-slate-900/70 px-3 py-3">
+        <p class="text-[10px] uppercase tracking-[0.14em] text-slate-500">gotchi dice</p>
+        <p class="mt-1 text-sm text-slate-100">{{ gotchiReply() }}</p>
+
+        @if (userLastMessage()) {
+        <p class="mt-2 text-[11px] text-slate-500">Tú: {{ userLastMessage() }}</p>
+        }
+      </div>
+
+      <div class="mt-2 grid grid-cols-[1fr_auto] gap-2 pb-2">
+        <input #talkBox type="text"
+          class="rounded-lg border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500"
+          placeholder="Háblale al gotchi..." [value]="talkInput()" (input)="talkInput.set(talkBox.value)"
+          (keydown.enter)="sendTalkMessage()" />
+
+        <button
+          class="rounded-lg bg-cyan-400 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+          (click)="sendTalkMessage()" [disabled]="isTalking()">
+          {{ isTalking() ? '...' : 'Send' }}
+        </button>
+      </div>
+    </section>
+
+    <section class="rounded-lg border border-white/10 bg-white/5 pt-2 px-2 backdrop-blur">
+      <div class="mb-2 flex items-center justify-between gap-3">
         <div>
           <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">inventory</p>
-
         </div>
         <div class="rounded-full bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-400">
           {{ totalItemCount() }} items
@@ -137,7 +165,7 @@
       <div class="grid grid-cols-5 gap-1.5">
         @for (drawer of drawers(); track drawer.type) {
         <button
-          class="inventory-tab group flex min-h-16 flex-col items-center justify-center gap-1 rounded-2xl border px-1.5 py-2 text-center transition"
+          class="inventory-tab group flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border px-1.5 py-2 text-center transition"
           (click)="toggleDrawer(drawer.type)" [attr.aria-label]="drawer.label" [title]="drawer.label"
           [class.inventory-tab-active]="openDrawer() === drawer.type"
           [class.inventory-tab-inactive]="openDrawer() !== drawer.type"
@@ -157,7 +185,7 @@
         }
       </div>
 
-      <div class="mt-3">
+      <div class="mt-2">
         @for (drawer of drawers(); track drawer.type) {
         @if (openDrawer() === drawer.type) {
         <div class="space-y-2">
@@ -165,10 +193,10 @@
           <div class="grid grid-cols-1 gap-2">
             @for (item of drawer.items; track item.id) {
             <button
-              class="grid w-full grid-cols-[42px_1fr_auto] items-center gap-2 rounded-2xl border border-white/10 bg-slate-900/70 px-3 py-2.5 text-left transition hover:border-cyan-400/40 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+              class="grid w-full grid-cols-[42px_1fr_auto] items-center gap-2 rounded-lg border border-white/10 bg-slate-900/70 px-3 py-2.5 text-left transition hover:border-cyan-400/40 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
               (click)="useItem(item.id)" [disabled]="pet().isDead || isSleeping() || item.quantity <= 0">
               <span
-                class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-400/10 text-sm font-black text-cyan-300">
+                class="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-400/10 text-sm font-black text-cyan-300">
                 {{ item.quantity }}
               </span>
 
@@ -186,7 +214,7 @@
           </div>
           } @else {
           <div
-            class="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 px-3 py-4 text-center text-sm text-slate-500">
+            class="rounded-lg border border-dashed border-white/10 bg-slate-900/40 px-3 py-4 text-center text-sm text-slate-500">
             Sin items aquí.
           </div>
           }
@@ -196,4 +224,53 @@
       </div>
     </section>
   </div>
+
+  @if (isConfigModalOpen()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4">
+    <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-950 p-4 shadow-2xl">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">gemini setup</p>
+          <h3 class="mt-1 text-lg font-black tracking-tight">Conecta la IA del gotchi</h3>
+          <p class="mt-2 text-xs text-slate-400">
+            Pega tu API key de Google Gemini para empezar a hablar con tu gotchi.
+          </p>
+        </div>
+
+        <button class="rounded-lg bg-white/10 px-2 py-1 text-xs text-slate-300" (click)="closeConfigModal()">
+          ✕
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-3">
+        <div>
+          <label class="mb-1 block text-[10px] uppercase tracking-[0.18em] text-slate-400">API key</label>
+          <input #apiBox type="password"
+            class="w-full rounded-lg border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500"
+            placeholder="AIza..." [value]="geminiApiKey()" (input)="geminiApiKey.set(apiBox.value)" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button
+            class="rounded-lg bg-cyan-400 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300"
+            (click)="testGeminiConnection()">
+            Probar
+          </button>
+
+          <button
+            class="rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold text-slate-100 transition hover:bg-white/20"
+            (click)="closeConfigModal()">
+            Cerrar
+          </button>
+        </div>
+
+        @if (geminiTestMessage()) {
+        <div class="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300">
+          {{ geminiTestMessage() }}
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
 </section>

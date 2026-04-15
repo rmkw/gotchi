@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { InventoryStore } from '../../core/store/inventory.store';
 import { PetStore } from '../../core/store/pet.store';
 import { ItemEffect } from '../../core/models/item.model';
+import { GotchiAiService } from '../../core/ai/gotchi-ai.service';
 
 @Component({
   selector: 'app-inventory-page',
@@ -21,6 +22,7 @@ import { ItemEffect } from '../../core/models/item.model';
 export class InventoryPageComponent implements OnInit {
   private readonly inventoryStore = inject(InventoryStore);
   private readonly petStore = inject(PetStore);
+  private readonly gotchiAiService = inject(GotchiAiService);
 
   readonly items = this.inventoryStore.inventoryView;
   readonly totalItemCount = computed(() =>
@@ -35,6 +37,15 @@ export class InventoryPageComponent implements OnInit {
   readonly openDrawer = signal<
     'food' | 'medicine' | 'cleaning' | 'toy' | 'special' | null
   >(null);
+
+  readonly talkInput = signal('');
+  readonly userLastMessage = signal('');
+  readonly gotchiReply = signal('Hola, rmkwz. ¿Quieres hablar un rato?');
+  readonly isTalking = signal(false);
+  readonly isConfigModalOpen = signal(false);
+  readonly geminiApiKey = signal('');
+  readonly geminiTestMessage = signal('');
+  readonly geminiConfigReady = signal(false);
 
   readonly petFace = computed(() => {
     if (this.isSleeping()) {
@@ -112,6 +123,7 @@ export class InventoryPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.petStore.startTicking();
+    this.geminiConfigReady.set(this.gotchiAiService.hasConfig());
   }
 
   toggleDrawer(
@@ -130,6 +142,68 @@ export class InventoryPageComponent implements OnInit {
 
   resetPet(): void {
     this.petStore.resetPet();
+  }
+
+  openTalk(): void {
+    if (!this.geminiConfigReady()) {
+      this.isConfigModalOpen.set(true);
+      return;
+    }
+  }
+
+  closeConfigModal(): void {
+    this.isConfigModalOpen.set(false);
+    this.geminiTestMessage.set('');
+  }
+
+  async testGeminiConnection(): Promise<void> {
+    this.geminiTestMessage.set('Probando conexión...');
+
+    const result = await this.gotchiAiService.testConnection(
+      this.geminiApiKey(),
+    );
+    this.geminiTestMessage.set(result.message);
+
+    if (result.ok) {
+      this.gotchiAiService.saveConfig(this.geminiApiKey());
+      this.geminiConfigReady.set(true);
+    }
+  }
+
+  async sendTalkMessage(): Promise<void> {
+    const message = this.talkInput().trim();
+    if (!message) return;
+
+    if (!this.geminiConfigReady()) {
+      this.isConfigModalOpen.set(true);
+      return;
+    }
+
+    this.userLastMessage.set(message);
+    this.isTalking.set(true);
+    this.gotchiReply.set('Pensando...');
+
+    try {
+      const reply = await this.gotchiAiService.sendMessage(message, {
+        name: this.pet().name,
+        mood: this.mood(),
+        statusMessage: this.statusMessage(),
+        health: this.pet().health,
+        food: this.pet().food,
+        happiness: this.pet().happiness,
+        energy: this.pet().energy,
+        cleanliness: this.pet().cleanliness,
+        isSleeping: this.isSleeping(),
+        isDead: this.pet().isDead,
+      });
+
+      this.gotchiReply.set(reply);
+      this.talkInput.set('');
+    } catch (error: any) {
+      this.gotchiReply.set(error?.message || 'No pude responder ahorita.');
+    } finally {
+      this.isTalking.set(false);
+    }
   }
 
   formatEffect(effect: ItemEffect): string {
