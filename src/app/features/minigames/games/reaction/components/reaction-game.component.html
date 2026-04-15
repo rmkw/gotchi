@@ -1,0 +1,102 @@
+<section class="rounded-3xl border border-white/10 bg-white/5 p-3 text-slate-100 backdrop-blur">
+  <header class="mb-3 flex items-start justify-between gap-3">
+    <div class="min-w-0">
+      <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">reaction game</p>
+
+      <p class="mt-2 text-xs text-slate-400">{{ statusText() }}</p>
+    </div>
+
+    <a routerLink="/minigames"
+      class="shrink-0 rounded-xl bg-white/10 px-3 py-2 text-xs font-semibold text-slate-100 transition hover:bg-white/20">
+      Volver
+    </a>
+  </header>
+
+  <div class="grid grid-cols-2 gap-2">
+    <div class="rounded-xl bg-slate-900/70 px-2.5 py-2">
+      <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
+        <span>Score</span>
+        <span class="mt-1 text-base font-black">{{ score() }}</span>
+      </div>
+
+    </div>
+    <div class="rounded-xl bg-slate-900/70 px-2.5 py-2">
+      <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
+        <span>Ronda</span>
+        <span class="mt-1 text-base font-black">{{ round() }}/{{ maxRounds }}</span>
+      </div>
+    </div>
+
+    <div class="rounded-xl bg-slate-900/70 px-2.5 py-2">
+      <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
+        <span>Tier</span>
+        <span class="mt-1 text-base font-black">{{ tier() ?? '-' }}</span>
+      </div>
+
+    </div>
+    <div class="rounded-xl bg-slate-900/70 px-2.5 py-2">
+      <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
+        <span>Dificultad</span>
+        <span class="mt-1 text-base font-black">{{ currentDifficulty() }}</span>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div
+    class="mt-3 flex min-h-96 items-center justify-center overflow-hidden rounded-xl border border-dashed border-cyan-400/20 bg-slate-900/70 p-4">
+    @if (!isRunning() && !reward()) {
+    <button class="rounded-3xl bg-cyan-400 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-300"
+      (click)="startGame()">
+      Iniciar partida
+    </button>
+    } @else if (isRunning()) {
+    <div class="flex h-full w-full items-center justify-center">
+      <button class="flex items-center justify-center rounded-full text-sm font-black transition-all duration-150"
+        [style.width.px]="targetSize()" [style.height.px]="targetSize()"
+        [style.transform]="'translate(' + targetOffsetX() + 'px, ' + targetOffsetY() + 'px)'"
+        [class.bg-rose-500]="isTargetVisible()" [class.text-white]="isTargetVisible()"
+        [class.scale-110]="isTargetVisible()" [class.animate-pulse]="isTargetVisible()"
+        [class.shadow-[0_0_35px_rgba(244,63,94,0.75)]]="isTargetVisible()" [class.bg-slate-700]="!isTargetVisible()"
+        [class.text-slate-300]="!isTargetVisible()" [class.scale-100]="!isTargetVisible()"
+        (click)="isTargetVisible() ? hitTarget() : missTarget()">
+        {{ isTargetVisible() ? '¡CLICK!' : '...' }}
+      </button>
+    </div>
+    }
+  </div>
+
+  @if (reward()) {
+  <div class="mt-3 rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-3">
+    <div class="mb-3 grid grid-cols-2 gap-2">
+      <button
+        class="rounded-xl bg-emerald-300 px-3 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-200"
+        (click)="startGame()">
+        Jugar otra vez
+      </button>
+
+      <a routerLink="/"
+        class="flex items-center justify-center rounded-xl bg-white/10 px-3 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/20">
+        Volver al gotchi
+      </a>
+    </div>
+
+    <p class="text-[10px] uppercase tracking-[0.18em] text-emerald-200">Rewards obtenidos</p>
+
+    <div class="mt-3 grid grid-cols-2 gap-2 ">
+      @for (entry of rewardDetails(); track entry.itemId) {
+      <div class="rounded-xl bg-emerald-500/10 px-3 py-3">
+        <p class="text-sm font-bold text-emerald-100">{{ entry.name }}</p>
+        <p class="mt-1 text-xs text-emerald-200">{{ entry.description }}</p>
+        <p class="mt-1 text-[10px] uppercase tracking-[0.18em] text-emerald-300">Rareza: {{ entry.rarity }}</p>
+      </div>
+      }
+    </div>
+
+    <p class="mt-3 text-xs text-emerald-200">Tier global: {{ reward()?.tier }}</p>
+
+
+  </div>
+  }
+</section>

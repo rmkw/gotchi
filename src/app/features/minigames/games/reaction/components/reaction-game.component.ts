@@ -6,9 +6,9 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { RewardService } from '../../../core/services/reward.service';
-import { RewardResult, RewardTier } from '../../../core/models/reward.model';
-import { InventoryStore } from '../../../core/store/inventory.store';
+import { RewardService } from '../../../../../core/services/reward.service';
+import { RewardResult, RewardTier } from '../../../../../core/models/reward.model';
+import { InventoryStore } from '../../../../../core/store/inventory.store';
 
 @Component({
   selector: 'app-reaction-game',
@@ -33,7 +33,7 @@ export class ReactionGameComponent {
   readonly tier = signal<RewardTier | null>(null);
   readonly targetOffsetX = signal(0);
   readonly targetOffsetY = signal(0);
-  readonly targetSize = signal(160);
+  readonly targetSize = signal(104);
 
   readonly currentDifficulty = computed(() => {
     const round = this.round();
@@ -123,7 +123,7 @@ export class ReactionGameComponent {
     const visibleDuration =
       baseVisibleDuration + Math.floor(Math.random() * 90);
 
-    const baseSize = Math.max(88, 150 - currentRound * 8);
+    const baseSize = Math.max(64, 104 - currentRound * 5);
     this.targetSize.set(baseSize);
 
     const maxOffset = Math.min(130, 25 + currentRound * 14);
