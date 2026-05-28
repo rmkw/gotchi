@@ -1,0 +1,74 @@
+:host {
+  display: block;
+}
+
+.sprite-review-page {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.pet-stage {
+  aspect-ratio: 1630 / 965;
+  min-height: 13rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.pet-scene-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pet-sprite {
+  position: absolute;
+  left: 50%;
+  bottom: 3%;
+  z-index: 1;
+  width: min(21%, 4.75rem);
+  transform: translateX(-50%);
+  background-repeat: no-repeat;
+  background-size: 600% 600%;
+  image-rendering: auto;
+  filter: drop-shadow(0 14px 18px rgb(15 23 42 / 0.45));
+}
+
+.pet-sprite-sleeping {
+  left: 82.5%;
+  bottom: 20%;
+  width: min(17%, 4rem);
+}
+
+.pet-sprite-happy {
+  width: min(24.26%, 5.49rem);
+}
+
+.pet-sprite-sleepy {
+  left: calc(50% + 17px);
+  width: min(38.29%, 8.67rem);
+}
+
+.pet-sprite-dirty {
+  width: min(37.71%, 8.54rem);
+}
+
+.pet-sprite-sick {
+  width: min(28.88%, 6.53rem);
+}
+
+.stage-label {
+  position: absolute;
+  left: 0.5rem;
+  top: 0.5rem;
+  border: 1px solid rgb(255 255 255 / 0.15);
+  border-radius: 999px;
+  background: rgb(2 6 23 / 0.55);
+  padding: 0.25rem 0.5rem;
+  color: rgb(241 245 249);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}

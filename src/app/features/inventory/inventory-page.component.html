@@ -1,4 +1,4 @@
-<section class="inventory-mobile-page mx-auto min-h-screen max-w-md px-3 py-3 text-slate-100 sm:px-4 sm:py-4">
+<section class="inventory-mobile-page mx-auto min-h-screen w-full max-w-md overflow-x-hidden px-3 py-3 text-slate-100 sm:px-4 sm:py-4">
   <div class="mb-2 flex items-center justify-between gap-4">
 
   </div>
@@ -26,11 +26,24 @@
       </div>
 
       <div class="mt-4 grid-cols-1 gap-4">
-        <div class="rounded-lg border border-white/10 bg-slate-900/70 p-6">
-          <div
-            class="flex min-h-52 flex-col items-center justify-center rounded-lg border border-dashed border-cyan-400/20 bg-gradient-to-b from-cyan-400/10 via-slate-900 to-fuchsia-500/10 p-6 text-center">
-            <div class="text-3xl md:text-3xl">{{ petFace() }}</div>
-            <p class="mt-4 text-sm uppercase tracking-[0.35em] text-slate-400">mascota</p>
+        <div class="rounded-lg border border-white/10 bg-slate-900/70 p-2">
+          <div class="pet-stage relative overflow-hidden rounded-lg border border-cyan-400/20 bg-slate-950"
+            [style.background-image]="activePetScene().usesSpriteSheet ? 'url(' + activePetScene().backgroundUrl + ')' : null">
+            @if (activePetScene().imageUrl) {
+            <img class="pet-scene-image" [src]="activePetScene().imageUrl" [alt]="activePetScene().label" />
+            } @else {
+            <div class="pet-sprite" [style.background-image]="'url(' + activePetScene().spriteSheetUrl + ')'"
+              [style.background-position]="spriteBackgroundPosition()"
+              [style.aspect-ratio]="activePetScene().spriteAspectRatio"
+              [class.pet-sprite-happy]="activePetScene().mood === 'happy'"
+              [class.pet-sprite-sleepy]="activePetScene().mood === 'sleepy'"
+              [class.pet-sprite-sleeping]="activePetScene().mood === 'sleeping'"
+              [class.pet-sprite-dirty]="activePetScene().mood === 'dirty'"
+              [class.pet-sprite-sick]="activePetScene().mood === 'sick'"
+              [attr.aria-label]="activePetScene().label" role="img"></div>
+            }
+
+
           </div>
         </div>
       </div>

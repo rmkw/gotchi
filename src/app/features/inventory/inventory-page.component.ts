@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   OnInit,
   computed,
   inject,
@@ -11,6 +12,73 @@ import { InventoryStore } from '../../core/store/inventory.store';
 import { PetStore } from '../../core/store/pet.store';
 import { ItemEffect } from '../../core/models/item.model';
 import { GotchiAiService } from '../../core/ai/gotchi-ai.service';
+import { PetMood } from '../../core/models/pet.model';
+
+type ScenePeriod = 'day' | 'night';
+type SceneMood = PetMood | 'sleeping';
+
+interface PetScene {
+  mood: SceneMood;
+  period: ScenePeriod;
+  label: string;
+  imageUrl: string | null;
+  spriteSheetUrl: string | null;
+  spriteAspectRatio: string | null;
+  backgroundUrl: string;
+  usesSpriteSheet: boolean;
+}
+
+interface SpriteSheetConfig {
+  url: string;
+  aspectRatio: string;
+}
+
+const GOTCHI_ASSET_BASE = '/assets/gotchi';
+
+const sceneBackgrounds: Record<ScenePeriod, string> = {
+  day: `${GOTCHI_ASSET_BASE}/escenario-dia.png`,
+  night: `${GOTCHI_ASSET_BASE}/escenario-noche.png`,
+};
+
+const spriteSheets: Partial<Record<SceneMood, SpriteSheetConfig>> = {
+  neutral: {
+    url: `${GOTCHI_ASSET_BASE}/animation-sequence-neutral.png`,
+    aspectRatio: '270 / 410',
+  },
+  happy: {
+    url: `${GOTCHI_ASSET_BASE}/animation-sequence-happy.png`,
+    aspectRatio: '322 / 419',
+  },
+  sad: {
+    url: `${GOTCHI_ASSET_BASE}/animation-sequence-triste.png`,
+    aspectRatio: '292 / 404',
+  },
+  sleepy: {
+    url: `${GOTCHI_ASSET_BASE}/animation-sequence-sueno.png`,
+    aspectRatio: '463 / 411',
+  },
+  sleeping: {
+    url: `${GOTCHI_ASSET_BASE}/animation-sequence-dormido.png`,
+    aspectRatio: '398 / 458',
+  },
+  dirty: {
+    url: `${GOTCHI_ASSET_BASE}/animation-sequence-sucio.png`,
+    aspectRatio: '494 / 421',
+  },
+  sick: {
+    url: `${GOTCHI_ASSET_BASE}/animation-sequence-enfermo.png`,
+    aspectRatio: '393 / 436',
+  },
+};
+
+const sceneImages: Record<ScenePeriod, Partial<Record<SceneMood, string>>> = {
+  day: {
+    dead: `${GOTCHI_ASSET_BASE}/dia-gameover.png`,
+  },
+  night: {
+    dead: `${GOTCHI_ASSET_BASE}/noche-gameover.png`,
+  },
+};
 
 @Component({
   selector: 'app-inventory-page',
@@ -19,10 +87,12 @@ import { GotchiAiService } from '../../core/ai/gotchi-ai.service';
   styleUrl: './inventory-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InventoryPageComponent implements OnInit {
+export class InventoryPageComponent implements OnInit, OnDestroy {
   private readonly inventoryStore = inject(InventoryStore);
   private readonly petStore = inject(PetStore);
   private readonly gotchiAiService = inject(GotchiAiService);
+  private clockIntervalId: ReturnType<typeof setInterval> | null = null;
+  private spriteIntervalId: ReturnType<typeof setInterval> | null = null;
 
   readonly items = this.inventoryStore.inventoryView;
   readonly totalItemCount = computed(() =>
@@ -46,28 +116,50 @@ export class InventoryPageComponent implements OnInit {
   readonly geminiApiKey = signal('');
   readonly geminiTestMessage = signal('');
   readonly geminiConfigReady = signal(false);
+  readonly currentTime = signal(new Date());
+  readonly spriteFrameIndex = signal(0);
 
-  readonly petFace = computed(() => {
+  readonly scenePeriod = computed<ScenePeriod>(() => {
+    const hour = this.currentTime().getHours();
+    return hour >= 6 && hour < 19 ? 'day' : 'night';
+  });
+
+  readonly scenePeriodLabel = computed(() =>
+    this.scenePeriod() === 'day' ? 'día' : 'noche',
+  );
+
+  readonly sceneMood = computed<SceneMood>(() => {
     if (this.isSleeping()) {
-      return '(-_-) zZ';
+      return 'sleeping';
     }
 
-    switch (this.mood()) {
-      case 'happy':
-        return '✨(^‿^)✨';
-      case 'sad':
-        return '(╥﹏╥)';
-      case 'sleepy':
-        return '(-_-) zZ';
-      case 'dirty':
-        return '( ._. )';
-      case 'sick':
-        return '(×﹏×)';
-      case 'dead':
-        return '(✖╭╮✖)';
-      default:
-        return '(•ᴗ•)';
-    }
+    return this.mood();
+  });
+
+  readonly activePetScene = computed<PetScene>(() => {
+    const period = this.scenePeriod();
+    const mood = this.sceneMood();
+    const imageUrl = sceneImages[period][mood] ?? null;
+    const spriteSheet = imageUrl ? null : (spriteSheets[mood] ?? null);
+
+    return {
+      mood,
+      period,
+      label: `${mood} · ${this.scenePeriodLabel()}`,
+      imageUrl,
+      spriteSheetUrl: spriteSheet?.url ?? null,
+      spriteAspectRatio: spriteSheet?.aspectRatio ?? null,
+      backgroundUrl: sceneBackgrounds[period],
+      usesSpriteSheet: !!spriteSheet,
+    };
+  });
+
+  readonly spriteBackgroundPosition = computed(() => {
+    const frame = this.spriteFrameIndex();
+    const column = frame % 6;
+    const row = Math.floor(frame / 6);
+
+    return `${column * 20}% ${row * 20}%`;
   });
 
   readonly canSleep = computed(() => {
@@ -124,6 +216,24 @@ export class InventoryPageComponent implements OnInit {
   ngOnInit(): void {
     this.petStore.startTicking();
     this.geminiConfigReady.set(this.gotchiAiService.hasConfig());
+    this.clockIntervalId = setInterval(() => {
+      this.currentTime.set(new Date());
+    }, 60000);
+    this.spriteIntervalId = setInterval(() => {
+      this.spriteFrameIndex.update((frame) => (frame + 1) % 36);
+    }, 120);
+  }
+
+  ngOnDestroy(): void {
+    if (this.clockIntervalId) {
+      clearInterval(this.clockIntervalId);
+      this.clockIntervalId = null;
+    }
+
+    if (this.spriteIntervalId) {
+      clearInterval(this.spriteIntervalId);
+      this.spriteIntervalId = null;
+    }
   }
 
   toggleDrawer(

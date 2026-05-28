@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { MinigamesPageComponent } from './features/minigames/minigames-page.component';
 import { ReactionGamePageComponent } from './features/minigames/games/reaction/reaction-game-page.component';
 import { InventoryPageComponent } from './features/inventory/inventory-page.component';
+import { SpriteReviewPageComponent } from './features/sprite-review/sprite-review-page.component';
 
 export const routes: Routes = [
   {
@@ -17,5 +18,9 @@ export const routes: Routes = [
   {
     path: 'minigames/reaction',
     component: ReactionGamePageComponent,
+  },
+  {
+    path: 'revisarsprite',
+    component: SpriteReviewPageComponent,
   },
 ];
