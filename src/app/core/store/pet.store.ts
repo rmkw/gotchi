@@ -5,6 +5,7 @@ import { PersistenceService } from '../services/persistence.service';
 
 const MAX_STAT = 100;
 const MIN_STAT = 0;
+const NATURAL_TICK_INTERVAL_MS = 30 * 60 * 1000;
 const PET_NAME_STORAGE_KEY = 'gotchi-pet-name';
 
 const initialPet: Pet = {
@@ -114,7 +115,7 @@ export class PetStore {
     this.isTicking.set(true);
     this.tickIntervalId = setInterval(() => {
       this.tick();
-    }, 4000);
+    }, NATURAL_TICK_INTERVAL_MS);
   }
 
   stopTicking(): void {

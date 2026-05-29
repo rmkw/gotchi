@@ -36,7 +36,7 @@ interface SpriteSheetConfig {
   aspectRatio: string;
 }
 
-const GOTCHI_ASSET_BASE = '/assets/gotchi';
+const GOTCHI_ASSET_BASE = 'assets/gotchi';
 
 const sceneBackgrounds: Record<ScenePeriod, string> = {
   day: `${GOTCHI_ASSET_BASE}/escenario-dia.png`,
