@@ -1,4 +1,4 @@
-# Gotchi
+# OpenGotchii
 
 Virtual pet built with Angular. The app combines a Tamagotchi-style care loop, animated sprite states, inventory items, simple minigames, daily rewards, and an AI chat so the pet can respond with personality.
 
@@ -103,5 +103,5 @@ npm test
 ## Project Notes
 
 - The current visual theme is based on the warm palette from the day scene.
-- Some persistence keys still use the original `gotchi` name for compatibility with existing local data.
-- A future low-impact rename to `OpenGotchii` should first update user-facing text and metadata, while leaving internal storage keys intact to avoid losing saved data.
+- Some persistence keys and internal folders still use the original `gotchi` name for compatibility with existing local data.
+- The visible project name is `OpenGotchii`; internal storage keys remain unchanged to avoid losing saved data.

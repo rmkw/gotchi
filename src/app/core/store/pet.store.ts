@@ -8,7 +8,7 @@ const MIN_STAT = 0;
 const PET_NAME_STORAGE_KEY = 'gotchi-pet-name';
 
 const initialPet: Pet = {
-  name: 'Gotchi',
+  name: 'OpenGotchii',
   food: 55,
   happiness: 70,
   energy: 45,

@@ -26,7 +26,7 @@ const itemCatalog: Item[] = [
     name: 'Lata premium',
     type: 'food',
     rarity: 'rare',
-    description: 'Comida potente que también anima al gotchi.',
+    description: 'Comida potente que también anima al cachorrito.',
     effect: { food: 20, happiness: 8 },
   },
   {
