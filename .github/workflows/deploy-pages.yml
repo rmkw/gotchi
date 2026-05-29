@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: read
   pages: write
@@ -37,7 +40,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm build -- --base-href /gotchi/
+        run: pnpm build --base-href /gotchi/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
