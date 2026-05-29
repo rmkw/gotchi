@@ -12,10 +12,13 @@ import { InventoryStore } from '../../core/store/inventory.store';
 import { PetStore } from '../../core/store/pet.store';
 import { ItemEffect } from '../../core/models/item.model';
 import { GotchiAiService } from '../../core/ai/gotchi-ai.service';
+import { GotchiAiProvider } from '../../core/ai/gotchi-ai.types';
 import { PetMood } from '../../core/models/pet.model';
 
 type ScenePeriod = 'day' | 'night';
 type SceneMood = PetMood | 'sleeping';
+const PET_NAME_STORAGE_KEY = 'gotchi-pet-name';
+const MAX_PET_NAME_LENGTH = 25;
 
 interface PetScene {
   mood: SceneMood;
@@ -110,12 +113,19 @@ export class InventoryPageComponent implements OnInit, OnDestroy {
 
   readonly talkInput = signal('');
   readonly userLastMessage = signal('');
-  readonly gotchiReply = signal('Hola, rmkwz. ¿Quieres hablar un rato?');
+  readonly gotchiReply = signal('¡Woof, woof!');
   readonly isTalking = signal(false);
   readonly isConfigModalOpen = signal(false);
+  readonly activeAiProvider = signal<GotchiAiProvider>('gemini');
+  readonly aiConfigProvider = signal<GotchiAiProvider | null>(null);
   readonly geminiApiKey = signal('');
-  readonly geminiTestMessage = signal('');
+  readonly minimaxApiKey = signal('');
+  readonly aiTestMessage = signal('');
   readonly geminiConfigReady = signal(false);
+  readonly isNameModalOpen = signal(false);
+  readonly petNameInput = signal('');
+  readonly petNameError = signal('');
+  readonly isPetNameReady = signal(hasStoredPetName());
   readonly currentTime = signal(new Date());
   readonly spriteFrameIndex = signal(0);
 
@@ -127,6 +137,45 @@ export class InventoryPageComponent implements OnInit, OnDestroy {
   readonly scenePeriodLabel = computed(() =>
     this.scenePeriod() === 'day' ? 'día' : 'noche',
   );
+
+  readonly currentClockLabel = computed(() => {
+    const date = this.currentTime();
+    const hours = date.getHours();
+    const minutes = `${date.getMinutes()}`.padStart(2, '0');
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+
+    return `${displayHours.toString().padStart(2, '0')}:${minutes} ${period}`;
+  });
+
+  readonly petNameCharactersLeft = computed(
+    () => MAX_PET_NAME_LENGTH - this.petNameInput().length,
+  );
+
+  readonly activeAiProviderLabel = computed(() =>
+    this.activeAiProvider() === 'gemini' ? 'Gemini' : 'MiniMax',
+  );
+
+  readonly aiStatusLabel = computed(() => {
+    const provider = this.aiConfigProvider();
+
+    if (!provider) {
+      return 'configurar ia';
+    }
+
+    return provider === 'gemini' ? 'gemini listo' : 'minimax listo';
+  });
+
+  readonly activeAiProviderBlocked = computed(() => {
+    const configuredProvider = this.aiConfigProvider();
+    return !!configuredProvider && configuredProvider !== this.activeAiProvider();
+  });
+
+  readonly connectedAiProviderLabel = computed(() => {
+    const provider = this.aiConfigProvider();
+    if (!provider) return '';
+    return provider === 'gemini' ? 'Gemini' : 'MiniMax';
+  });
 
   readonly sceneMood = computed<SceneMood>(() => {
     if (this.isSleeping()) {
@@ -168,7 +217,7 @@ export class InventoryPageComponent implements OnInit, OnDestroy {
   });
 
   readonly sleepButtonLabel = computed(() => {
-    return this.isSleeping() ? 'Despertar' : 'Dormir';
+    return this.isSleeping() ? 'Despertar ⏰' : 'Dormir 💤';
   });
 
   readonly drawers = computed(() => {
@@ -214,8 +263,17 @@ export class InventoryPageComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    this.petStore.startTicking();
-    this.geminiConfigReady.set(this.gotchiAiService.hasConfig());
+    if (this.isPetNameReady()) {
+      this.petStore.startTicking();
+    } else {
+      this.openNameModal();
+      this.petStore.stopTicking();
+    }
+
+    const aiConfig = this.gotchiAiService.getConfig();
+    this.geminiConfigReady.set(!!aiConfig?.apiKey);
+    this.aiConfigProvider.set(aiConfig?.provider ?? null);
+    this.activeAiProvider.set(aiConfig?.provider ?? 'gemini');
     this.clockIntervalId = setInterval(() => {
       this.currentTime.set(new Date());
     }, 60000);
@@ -252,31 +310,79 @@ export class InventoryPageComponent implements OnInit, OnDestroy {
 
   resetPet(): void {
     this.petStore.resetPet();
+    localStorage.removeItem(PET_NAME_STORAGE_KEY);
+    this.isPetNameReady.set(false);
+    this.petStore.stopTicking();
+    this.openNameModal();
+  }
+
+  openNameModal(): void {
+    this.petNameInput.set('');
+    this.petNameError.set('');
+    this.isNameModalOpen.set(true);
+  }
+
+  savePetName(): void {
+    const name = sanitizePetName(this.petNameInput());
+
+    if (!name) {
+      this.petNameError.set('Escribe un nombre para tu cachorrito.');
+      return;
+    }
+
+    this.petStore.renamePet(name);
+    this.isPetNameReady.set(true);
+    this.isNameModalOpen.set(false);
+    this.petNameInput.set('');
+    this.petNameError.set('');
+    this.petStore.startTicking();
   }
 
   openTalk(): void {
-    if (!this.geminiConfigReady()) {
-      this.isConfigModalOpen.set(true);
-      return;
-    }
+    this.isConfigModalOpen.set(true);
   }
 
   closeConfigModal(): void {
     this.isConfigModalOpen.set(false);
-    this.geminiTestMessage.set('');
+    this.aiTestMessage.set('');
   }
 
-  async testGeminiConnection(): Promise<void> {
-    this.geminiTestMessage.set('Probando conexión...');
+  selectAiProvider(provider: GotchiAiProvider): void {
+    this.activeAiProvider.set(provider);
+    this.aiTestMessage.set('');
+  }
+
+  disconnectAiProvider(): void {
+    this.gotchiAiService.clearConfig();
+    this.geminiConfigReady.set(false);
+    this.aiConfigProvider.set(null);
+    this.aiTestMessage.set('IA desconectada. Ahora puedes conectar otro proveedor.');
+  }
+
+  async testAiConnection(): Promise<void> {
+    if (this.activeAiProviderBlocked()) {
+      this.aiTestMessage.set(
+        `Desconecta ${this.connectedAiProviderLabel()} antes de activar otra IA.`,
+      );
+      return;
+    }
+
+    this.aiTestMessage.set('Probando conexión...');
+    const provider = this.activeAiProvider();
+    const apiKey =
+      provider === 'gemini' ? this.geminiApiKey() : this.minimaxApiKey();
 
     const result = await this.gotchiAiService.testConnection(
-      this.geminiApiKey(),
+      apiKey,
+      provider,
     );
-    this.geminiTestMessage.set(result.message);
+    this.aiTestMessage.set(result.message);
 
     if (result.ok) {
-      this.gotchiAiService.saveConfig(this.geminiApiKey());
+      this.gotchiAiService.saveConfig(apiKey, provider);
       this.geminiConfigReady.set(true);
+      this.aiConfigProvider.set(provider);
+      this.closeConfigModal();
     }
   }
 
@@ -334,4 +440,12 @@ export class InventoryPageComponent implements OnInit, OnDestroy {
 
 function formatSignedValue(value: number): string {
   return value > 0 ? `+${value}` : `${value}`;
+}
+
+function hasStoredPetName(): boolean {
+  return sanitizePetName(localStorage.getItem(PET_NAME_STORAGE_KEY) ?? '').length > 0;
+}
+
+function sanitizePetName(name: string): string {
+  return name.trim().slice(0, MAX_PET_NAME_LENGTH);
 }

@@ -12,7 +12,7 @@
         <div class="flex flex-col items-end gap-3">
           <div
             class="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-200">
-            {{ mood() }}
+            {{ currentClockLabel() }}
           </div>
         </div>
 
@@ -50,8 +50,8 @@
 
       <div class="mt-3 grid grid-cols-3 gap-2">
         <div class="rounded-lg bg-white/5 px-2.5 py-2">
-          <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
-            <span>HP</span>
+          <div class="mb-1 flex items-center justify-between text-[10px] text-slate-300">
+            <span>Puntos de vida ♥️</span>
             <span>{{ pet().health }}</span>
           </div>
           <div class="h-2 overflow-hidden rounded-full bg-slate-800">
@@ -60,8 +60,8 @@
         </div>
 
         <div class="rounded-lg bg-white/5 px-2.5 py-2">
-          <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
-            <span>Food</span>
+          <div class="mb-1 flex items-center justify-between text-[10px] text-slate-300">
+            <span>Comida 🍖</span>
             <span>{{ pet().food }}</span>
           </div>
           <div class="h-2 overflow-hidden rounded-full bg-slate-800">
@@ -70,8 +70,8 @@
         </div>
 
         <div class="rounded-lg bg-white/5 px-2.5 py-2">
-          <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
-            <span>Happy</span>
+          <div class="mb-1 flex items-center justify-between text-[10px] text-slate-300">
+            <span>Felicidad ✨</span>
             <span>{{ pet().happiness }}</span>
           </div>
           <div class="h-2 overflow-hidden rounded-full bg-slate-800">
@@ -80,8 +80,8 @@
         </div>
 
         <div class="rounded-lg bg-white/5 px-2.5 py-2">
-          <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
-            <span>Energy</span>
+          <div class="mb-1 flex items-center justify-between text-[10px] text-slate-300">
+            <span>Energía ⚡</span>
             <span>{{ pet().energy }}</span>
           </div>
           <div class="h-2 overflow-hidden rounded-full bg-slate-800">
@@ -90,8 +90,8 @@
         </div>
 
         <div class="rounded-lg bg-white/5 px-2.5 py-2">
-          <div class="mb-1 flex items-center justify-between text-[11px] text-slate-300">
-            <span>Clean</span>
+          <div class="mb-1 flex items-center justify-between text-[10px] text-slate-300">
+            <span>Limpieza 🧼</span>
             <span>{{ pet().cleanliness }}</span>
           </div>
           <div class="h-2 overflow-hidden rounded-full bg-slate-800">
@@ -100,33 +100,33 @@
         </div>
 
         <div class="flex items-center justify-between rounded-lg border border-rose-400/15 bg-rose-400/10 px-3 py-2">
-          <span class="text-[10px] uppercase tracking-[0.18em] text-rose-200">{{ '(✖╭╮✖)' }} muertes</span>
-          <span class="text-lg font-black text-rose-100">{{ deathCount() }}</span>
+          <span class="text-[9px] tracking-[0.18em] text-rose-200">Aventuras 🐾</span>
+          <span class="text-[9px] font-black text-rose-100">{{ deathCount() }}</span>
         </div>
       </div>
 
       <div class="mt-3 grid grid-cols-3 gap-2">
         <button
-          class="rounded-lg bg-amber-300 px-3 py-2.5 text-xs font-semibold text-slate-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+          class="rounded-lg bg-amber-300 px-3 py-2.5 text-[10px] font-semibold text-slate-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           (click)="sleep()" [disabled]="pet().isDead || (!isSleeping() && !canSleep())">
           {{ sleepButtonLabel() }}
         </button>
 
         @if (!pet().isDead) {
         <a routerLink="/minigames"
-          class="flex items-center justify-center rounded-lg bg-cyan-400 px-3 py-2.5 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300">
-          Play
+          class="flex items-center justify-center rounded-lg bg-cyan-400 px-3 py-2.5 text-[10px] font-semibold text-slate-950 transition hover:bg-cyan-300">
+          Mini juegos 🎮
         </a>
         } @else {
-        <div class="rounded-lg bg-slate-800/60 px-3 py-2.5 text-center text-xs text-slate-500">
-          No play
+        <div class="rounded-lg bg-slate-800/60 px-3 py-2.5 text-center text-[10px] text-slate-500">
+
         </div>
         }
 
         <button
-          class="rounded-lg bg-rose-400 px-3 py-2.5 text-xs font-semibold text-slate-950 transition hover:bg-rose-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+          class="rounded-lg bg-rose-400 px-3 py-2.5 text-[10px] font-semibold text-slate-950 transition hover:bg-rose-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           (click)="resetPet()" [disabled]="!pet().isDead">
-          Reset
+          Nueva aventura ❤︎
         </button>
       </div>
     </article>
@@ -134,33 +134,39 @@
     <section class="rounded-lg border border-white/10 bg-white/5 pt-2 px-2 backdrop-blur">
       <div class="mb-2 flex items-center justify-between gap-3">
         <div>
-          <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">talk</p>
+          <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">Habla con tu mejor amigo.</p>
         </div>
-        <button class="rounded-full bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-300"
-          (click)="openTalk()">
-          {{ geminiConfigReady() ? 'gemini listo' : 'configurar ia' }}
+        <button
+          class="gemini-status-button rounded-full bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-300"
+          [class.gemini-status-button-ready]="geminiConfigReady()" (click)="openTalk()">
+          {{ aiStatusLabel() }}
         </button>
       </div>
 
-      <div class="rounded-lg border border-white/10 bg-slate-900/70 px-3 py-3">
-        <p class="text-[10px] uppercase tracking-[0.14em] text-slate-500">gotchi dice</p>
-        <p class="mt-1 text-sm text-slate-100">{{ gotchiReply() }}</p>
-
+      <div class="space-y-2 rounded-lg border border-white/10 bg-slate-900/70 px-3 py-3">
         @if (userLastMessage()) {
-        <p class="mt-2 text-[11px] text-slate-500">Tú: {{ userLastMessage() }}</p>
+        <div class="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5">
+          <p class="text-[8px] uppercase tracking-[0.12em] text-slate-500">Tú dices:</p>
+          <p class="mt-0.5 text-[11px] text-slate-100">{{ userLastMessage() }}</p>
+        </div>
         }
+
+        <div class="rounded-lg border border-white/10 bg-white/5 px-2.5 py-2">
+          <p class="text-[9px] uppercase tracking-[0.13em] text-slate-500">Tu cachorrito dice:</p>
+          <p class="mt-0.5 text-xs text-slate-100">{{ gotchiReply() }}</p>
+        </div>
       </div>
 
       <div class="mt-2 grid grid-cols-[1fr_auto] gap-2 pb-2">
         <input #talkBox type="text"
           class="rounded-lg border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500"
-          placeholder="Háblale al gotchi..." [value]="talkInput()" (input)="talkInput.set(talkBox.value)"
+          placeholder="Háblale a tu cachorrito..." [value]="talkInput()" (input)="talkInput.set(talkBox.value)"
           (keydown.enter)="sendTalkMessage()" />
 
         <button
           class="rounded-lg bg-cyan-400 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           (click)="sendTalkMessage()" [disabled]="isTalking()">
-          {{ isTalking() ? '...' : 'Send' }}
+          {{ isTalking() ? '...' : '⏎' }}
         </button>
       </div>
     </section>
@@ -168,10 +174,10 @@
     <section class="rounded-lg border border-white/10 bg-white/5 pt-2 px-2 backdrop-blur">
       <div class="mb-2 flex items-center justify-between gap-3">
         <div>
-          <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">inventory</p>
+          <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">Mochila 🎒</p>
         </div>
         <div class="rounded-full bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-          {{ totalItemCount() }} items
+          {{ totalItemCount() }} Cositas 🧩
         </div>
       </div>
 
@@ -238,36 +244,118 @@
     </section>
   </div>
 
-  @if (isConfigModalOpen()) {
+  @if (isNameModalOpen()) {
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4">
     <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-950 p-4 shadow-2xl">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">gemini setup</p>
-          <h3 class="mt-1 text-lg font-black tracking-tight">Conecta la IA del gotchi</h3>
-          <p class="mt-2 text-xs text-slate-400">
-            Pega tu API key de Google Gemini para empezar a hablar con tu gotchi.
-          </p>
-        </div>
-
-        <button class="rounded-lg bg-white/10 px-2 py-1 text-xs text-slate-300" (click)="closeConfigModal()">
-          ✕
-        </button>
+      <div>
+        <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">nueva aventura</p>
+        <h3 class="mt-1 text-lg font-black tracking-tight">Ponle nombre a tu cachorrito</h3>
+        <p class="mt-2 text-xs text-slate-400">
+          Este nombre se guardará y aparecerá en tu aventura.
+        </p>
       </div>
 
       <div class="mt-4 space-y-3">
         <div>
-          <label class="mb-1 block text-[10px] uppercase tracking-[0.18em] text-slate-400">API key</label>
-          <input #apiBox type="password"
+          <div class="mb-1 flex items-center justify-between gap-3">
+            <label class="block text-[10px] uppercase tracking-[0.18em] text-slate-400">Nombre</label>
+            <span class="text-[10px] uppercase tracking-[0.14em] text-slate-500">
+              {{ petNameCharactersLeft() }} restantes
+            </span>
+          </div>
+
+          <input #nameBox type="text" maxlength="25"
             class="w-full rounded-lg border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500"
-            placeholder="AIza..." [value]="geminiApiKey()" (input)="geminiApiKey.set(apiBox.value)" />
+            placeholder="Ej. Max, Luna, Chispa..." [value]="petNameInput()"
+            (input)="petNameInput.set(nameBox.value)" (keydown.enter)="savePetName()" />
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
+        @if (petNameError()) {
+        <div class="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300">
+          {{ petNameError() }}
+        </div>
+        }
+
+        <button
+          class="w-full rounded-lg bg-cyan-400 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300"
+          (click)="savePetName()">
+          Guardar nombre
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (isConfigModalOpen()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4">
+    <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-950 p-4 shadow-2xl">
+      <div>
+        <div>
+          <div class="mb-3 grid grid-cols-2 gap-1 rounded-lg border border-white/10 bg-slate-900/70 p-1">
+            <button
+              class="rounded-md px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] transition"
+              [class.bg-cyan-400]="activeAiProvider() === 'gemini'"
+              [class.text-slate-950]="activeAiProvider() === 'gemini'"
+              [class.text-slate-400]="activeAiProvider() !== 'gemini'"
+              (click)="selectAiProvider('gemini')">
+              Gemini
+            </button>
+            <button
+              class="rounded-md px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] transition"
+              [class.bg-cyan-400]="activeAiProvider() === 'minimax'"
+              [class.text-slate-950]="activeAiProvider() === 'minimax'"
+              [class.text-slate-400]="activeAiProvider() !== 'minimax'"
+              (click)="selectAiProvider('minimax')">
+              MiniMax
+            </button>
+          </div>
+          <p class="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">
+            {{ activeAiProviderLabel() }} setup
+          </p>
+          <h3 class="mt-1 text-lg font-black tracking-tight">Conecta la IA del gotchi</h3>
+          <p class="mt-2 text-xs text-slate-400">
+            @if (activeAiProvider() === 'gemini') {
+            Pega tu API key de Google Gemini para empezar a hablar con tu gotchi.
+            } @else {
+            Pega tu API key de MiniMax Token Plan & Credits para hablar con tu gotchi.
+            }
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-4 space-y-3">
+        @if (activeAiProviderBlocked()) {
+        <div class="rounded-lg border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-xs text-amber-100">
+          Tienes conectada la API de {{ connectedAiProviderLabel() }}. Desconéctala para activar otra IA.
+        </div>
+        }
+
+        <div>
+          <label class="mb-1 block text-[10px] uppercase tracking-[0.18em] text-slate-400">API key</label>
+          @if (activeAiProvider() === 'gemini') {
+          <input #apiBox type="password"
+            class="w-full rounded-lg border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500"
+            placeholder="AIza..." [value]="geminiApiKey()" (input)="geminiApiKey.set(apiBox.value)"
+            [disabled]="activeAiProviderBlocked()" />
+          } @else {
+          <input #minimaxBox type="password"
+            class="w-full rounded-lg border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500"
+            placeholder="MiniMax API key..." [value]="minimaxApiKey()"
+            (input)="minimaxApiKey.set(minimaxBox.value)" [disabled]="activeAiProviderBlocked()" />
+          }
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
           <button
-            class="rounded-lg bg-cyan-400 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300"
-            (click)="testGeminiConnection()">
+            class="rounded-lg bg-cyan-400 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+            (click)="testAiConnection()" [disabled]="activeAiProviderBlocked()">
             Probar
+          </button>
+
+          <button
+            class="rounded-lg bg-rose-400/90 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-rose-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+            (click)="disconnectAiProvider()" [disabled]="!geminiConfigReady()">
+            Apagar
           </button>
 
           <button
@@ -277,9 +365,9 @@
           </button>
         </div>
 
-        @if (geminiTestMessage()) {
+        @if (aiTestMessage()) {
         <div class="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300">
-          {{ geminiTestMessage() }}
+          {{ aiTestMessage() }}
         </div>
         }
       </div>

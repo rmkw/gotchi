@@ -5,6 +5,7 @@ import { PersistenceService } from '../services/persistence.service';
 
 const MAX_STAT = 100;
 const MIN_STAT = 0;
+const PET_NAME_STORAGE_KEY = 'gotchi-pet-name';
 
 const initialPet: Pet = {
   name: 'Gotchi',
@@ -48,26 +49,26 @@ export class PetStore {
     const pet = this.pet();
 
     if (pet.isDead) {
-      return 'Gotchi murió. Reiniciarlo crea una nueva vida y pierde la identidad de la anterior.';
+      return 'Tu cachorrito terminó su aventura. Puedes comenzar una nueva y crear más recuerdos.';
     }
 
     if (this.isSleeping()) {
-      return 'Está durmiendo. Recupera energía poco a poco.';
+      return 'Está descansando y soñando cosas bonitas.';
     }
 
     switch (this.mood()) {
       case 'happy':
-        return 'Está cómodo, brillante y con ganas de jugar.';
+        return '¡El cachorrito está saltando de alegría!';
       case 'sad':
-        return 'Se siente descuidado. Ya pide atención.';
+        return 'Tu cachorrito quiere compañía.';
       case 'sleepy':
-        return 'Tiene sueño. Le urge descansar.';
+        return 'Está buscando un lugar cómodo para dormir.';
       case 'dirty':
-        return 'Está sucio. Toca limpiar antes de que empeore.';
+        return 'Se ensució jugando en el parque.';
       case 'sick':
-        return 'Se ve mal. La salud ya está en zona delicada.';
+        return 'Tu cachorrito necesita descansar un poquito.';
       default:
-        return 'Está estable, pero siempre puede estar mejor.';
+        return 'Está atento a lo que sucede a su alrededor.';
     }
   });
 
@@ -92,7 +93,15 @@ export class PetStore {
     ]);
 
     if (savedPet) {
-      this.pet.set(savedPet);
+      this.pet.set({
+        ...savedPet,
+        name: loadStoredPetName() ?? savedPet.name,
+      });
+    } else {
+      this.pet.set({
+        ...initialPet,
+        name: loadStoredPetName() ?? initialPet.name,
+      });
     }
 
     this.deathCount.set(savedDeathCount);
@@ -125,6 +134,17 @@ export class PetStore {
     this.stopSleeping();
     this.pet.set({ ...initialPet });
     this.startTicking();
+  }
+
+  renamePet(name: string): void {
+    const nextName = sanitizePetName(name);
+    if (!nextName) return;
+
+    localStorage.setItem(PET_NAME_STORAGE_KEY, nextName);
+    this.pet.update((pet) => ({
+      ...pet,
+      name: nextName,
+    }));
   }
 
   tick(): void {
@@ -243,4 +263,13 @@ export class PetStore {
 
 function clamp(value: number): number {
   return Math.max(MIN_STAT, Math.min(MAX_STAT, value));
+}
+
+function loadStoredPetName(): string | null {
+  const name = sanitizePetName(localStorage.getItem(PET_NAME_STORAGE_KEY) ?? '');
+  return name || null;
+}
+
+function sanitizePetName(name: string): string {
+  return name.trim().slice(0, 25);
 }

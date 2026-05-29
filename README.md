@@ -1,59 +1,107 @@
 # Gotchi
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.24.
+Virtual pet built with Angular. The app combines a Tamagotchi-style care loop, animated sprite states, inventory items, simple minigames, daily rewards, and an AI chat so the pet can respond with personality.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- Virtual pet stats: health, food, happiness, energy, cleanliness, sleep state, death state, and adventure counter.
+- Day and night scenes driven by the current local time.
+- Animated sprites for neutral, happy, sad, sleepy, sleeping, dirty, and sick states.
+- Dedicated game-over scenes for day and night.
+- Pet naming flow with a startup modal and reset modal.
+- Inventory grouped by food, medicine, cleaning, toys, and special items.
+- Daily special gift that can be claimed once per day.
+- Minigame area with a reaction game.
+- Sprite review page at `/revisarsprite` to compare all animation states.
+- AI chat with Gemini or MiniMax provider selection.
+- Local chat memory for user name, remembered notes, and recent conversation.
 
-```bash
-ng serve
-```
+## AI Chat
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+The chat can use either Google Gemini or MiniMax. Open the AI setup modal from the chat status button and choose one provider.
 
-## Code scaffolding
+Only one provider can be active at a time. To switch providers, disconnect the current one with `Apagar`, then configure the other provider.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Current defaults:
 
-```bash
-ng generate component component-name
-```
+- Gemini: `gemini-flash-latest`
+- MiniMax: `MiniMax-M2.7`
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+The app stores API keys in browser `localStorage` for local testing. This is convenient during development, but it is not safe for production. A production version should route AI calls through a backend or secure proxy so provider keys are not exposed in client-side code.
 
-```bash
-ng generate --help
-```
+## Chat Memory
 
-## Building
+The AI service stores lightweight local memory in `localStorage`:
 
-To build the project run:
+- Up to 24 remembered notes from phrases like `recuerda que...` or `no olvides que...`.
+- Up to 20 recent user/pet exchanges.
+- The user's name when detected from phrases like `me llamo...`, `mi nombre es...`, or `soy...`.
 
-```bash
-ng build
-```
+This memory is sent with each prompt so the pet can answer with more continuity.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Assets
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Main pet assets live in:
 
 ```bash
-ng e2e
+public/assets/gotchi
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+The current scene system uses:
 
-## Additional Resources
+- `escenario-dia.png`
+- `escenario-noche.png`
+- `dia-gameover.png`
+- `noche-gameover.png`
+- `animation-sequence-neutral.png`
+- `animation-sequence-happy.png`
+- `animation-sequence-triste.png`
+- `animation-sequence-sueno.png`
+- `animation-sequence-dormido.png`
+- `animation-sequence-sucio.png`
+- `animation-sequence-enfermo.png`
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the local dev server:
+
+```bash
+npm start
+```
+
+Open:
+
+```bash
+http://localhost:4200/
+```
+
+Build the app:
+
+```bash
+npm run build
+```
+
+Run unit tests:
+
+```bash
+npm test
+```
+
+## Useful Routes
+
+- `/` main pet screen
+- `/minigames` minigames hub and daily gift
+- `/minigames/reaction` reaction game
+- `/revisarsprite` sprite comparison page
+
+## Project Notes
+
+- The current visual theme is based on the warm palette from the day scene.
+- Some persistence keys still use the original `gotchi` name for compatibility with existing local data.
+- A future low-impact rename to `OpenGotchii` should first update user-facing text and metadata, while leaving internal storage keys intact to avoid losing saved data.

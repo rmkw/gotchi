@@ -1,4 +1,7 @@
+export type GotchiAiProvider = 'gemini' | 'minimax';
+
 export interface GotchiAiConfig {
+  provider: GotchiAiProvider;
   apiKey: string;
   model: string;
 }
