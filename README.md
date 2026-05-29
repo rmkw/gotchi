@@ -66,13 +66,13 @@ The current scene system uses:
 Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 Start the local dev server:
 
 ```bash
-npm start
+pnpm start
 ```
 
 Open:
@@ -84,13 +84,13 @@ http://localhost:4200/
 Build the app:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 Run unit tests:
 
 ```bash
-npm test
+pnpm test
 ```
 
 ## Useful Routes
