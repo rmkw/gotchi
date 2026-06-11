@@ -105,3 +105,5 @@ pnpm test
 - The current visual theme is based on the warm palette from the day scene.
 - Some persistence keys and internal folders still use the original `gotchi` name for compatibility with existing local data.
 - The visible project name is `OpenGotchii`; internal storage keys remain unchanged to avoid losing saved data.
+
+MIT🗿
